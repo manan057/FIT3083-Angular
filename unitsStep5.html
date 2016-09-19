@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!-- NOT WORKING -->
+<html lang="en" ng-app="unitList">
+<head>
+  <meta charset="UTF-8">  <!-- AngularJS directive -->
+  <title>Units Step 5</title>
+  <link href="css/bootstrap.css" rel="stylesheet"/>
+</head>
+<body>
+  <div class="container-fluid">  <!-- required by bootstrap-->
+    <h1>Units Step 5 (HTML + AngularJS + Controllers + Filter)</h1>
+    <!-- next div: AngularJS directive, ng-init out, ng-controller in -->
+    <div ng-controller="unitListController">
+      <div class="row">
+        <div class="col-sm-6">
+          <!-- <button class="btn btn-primary btn-lg" ng-click="addUnit()" ng-disabled="!enablAdd()"> -->
+          <button class="btn btn-primary btn-lg" ng-click="addUnit()">
+            Add a new unit
+          </button>
+          <button class="btn btn-danger btn-lg" ng-click="clearUnits()">
+            Clear units
+          </button>
+        </div>
+        <div class="col-sm-4 col-sm-offset-8">
+          <input class="form-control input-lg" ng-model="searchKey" placeholder="Search?">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3" ng-repeat="unit in units | filter:searchKey">  <!-- AngularJS directive -->
+          <h2>{{unit.code}}</h2>    <!-- {{..}} == AngularJS binding mark up -->
+          <h4>{{unit.title}}</h4>
+          <h2>{{unit.mark}}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/angular.min.js"></script>
+  <script src="scripts/units.js"></script>
+  <script>
+    //add a controller to the unitList app Module
+    angular.module('unitList', []).controller('unitListController', UnitListController);
+    //code a Controller
+    function UnitListController($scope) {
+      // $scope.units = units;  //decorate scope
+      var index = 0;  //private closure variable of constructor object
+      $scope.units = [];
+      //bi-directional data binding will update UI
+      $scope.addUnit = function() {
+        if ($scope.enableAdd())
+          $scope.units.push(units[index++])
+      };
+      //bi-directional data binding will update UI
+      $scope.clearUnits = function() {
+        $scope.units = [];
+        index = 0;
+      }
+      //any units left in units to add?
+      $scope.enableAdd = function() {
+        return index < units.length;
+      }
+    }
+  </script>
+</body>
+</html>

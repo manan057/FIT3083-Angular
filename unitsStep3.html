@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!-- NOT WORKING -->
+<html lang="en" ng-app="unitList">
+<head>
+  <meta charset="UTF-8">  <!-- AngularJS directive -->
+  <title>Units Step 3</title>
+  <link href="css/bootstrap.css" rel="stylesheet"/>
+</head>
+<body>
+  <div class="container-fluid">  <!-- required by bootstrap-->
+    <h1>Units Step 3 (HTML + AngularJS + Controllers)</h1>
+    <!-- next div: AngularJS directive, ng-init out, ng-controller in -->
+    <div class="row" ng-controller="unitListController">
+
+      <div class="col-sm-3" ng-repeat="unit in units">  <!-- AngularJS directive -->
+        <h2>{{unit.code}}</h2>    <!-- {{..}} == AngularJS binding mark up -->
+        <h4>{{unit.title}}</h4>
+        <h2>{{unit.mark}}</h2>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/angular.min.js"></script>
+  <script src="scripts/units.js"></script>
+  <script>
+    //add a controller to the unitList app Module
+    angular.module('unitList', []).controller('unitListController', UnitListController);
+    //code a Controller
+    function UnitListController($scope) {
+      $scope.units = units;  //decorate scope
+    }
+  </script>
+</body>
+</html>
