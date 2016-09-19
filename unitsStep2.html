@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+  <meta charset="UTF-8">  <!-- AngularJS directive -->
+  <title>Units Step 2</title>
+  <link href="css/bootstrap.css" rel="stylesheet"/>
+</head>
+<body>
+  <div class="container-fluid">  <!-- required by bootstrap-->
+    <h1>Units Step 2 (HTML + AngularJS)</h1>
+    <!-- next div: id no longer required also AngularJS directive -->
+    <div class="row" ng-init="units=[
+    {code: 'FIT1001', title: 'Programming 1', mark: 99},
+    {code: 'FIT1002', title: 'Programming 2', mark: 100},
+    {code: 'FIT1003', title: 'Other Irrelevant Topics', mark: 50},
+    {code: 'FIT1003', title: 'More Irrelevant Topics', mark: 50}]">
+
+      <div class="col-sm-3" ng-repeat="unit in units">  <!-- AngularJS directive -->
+        <h2>{{unit.code}}</h2>    <!-- {{..}} == AngularJS binding mark up -->
+        <h4>{{unit.title}}</h4>
+        <h2>{{unit.mark}}</h2>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/angular.min.js"></script>
+  <!-- <script src="scripts/units.js"></script> -->
+</body>
+</html>
