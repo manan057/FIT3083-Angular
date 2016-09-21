@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- NOT WORKING -->
 <html lang="en" ng-app="unitList">
 <head>
   <meta charset="UTF-8">  <!-- AngularJS directive -->
@@ -28,7 +27,14 @@
       <br>
       <div class="row">
         <div class="col-xs-12">  <!-- AngularJS directive -->
-          <table class="table table-bordered">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <td><strong>Unit Code</strong></td>
+                <td><strong>Unit Title</strong></td>
+                <td><strong>Unit Mark</strong></td>
+              </tr>
+            </thead>
             <tbody>
               <tr ng-repeat="unit in units | filter:searchKey">
                 <td>{{unit.code}}</td>
