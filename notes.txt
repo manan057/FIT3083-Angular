@@ -1,6 +1,0 @@
-ng-app="unitList"
-angular.module('unitList', []).controller('unitListController', UnitListController);
-
-NOTE: ng-app="applicationModuleName"
-- Without an application module we cannot have Controllers, without Controllers we cannot have
-actions which respond to user interaction in the UI
