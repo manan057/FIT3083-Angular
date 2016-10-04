@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html ng-app="taskMaintenance"> <!-- whole page will be bootstrapped -->
+<head> <!-- root module is unitMaintenance -->
+    <title>Tasks</title>
+    <link href="styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="styles/styles.css" rel="stylesheet"/>
+</head>
+
+<body>
+    <div class="container-fluid" ng-controller="taskMaintenanceCtrl">
+        <h1>Tasks</h1>
+
+        <!-- LIST -->
+        <div ng-show="view === 'list'">
+            <div class="row">
+                <div class="col-sm-2">
+                    <button class="btn btn-primary btn-lg" ng-click="startAdd()">
+                        Add new unit
+                    </button>
+                </div>
+                <div class="col-sm-4">
+                    <input class="form-control input-lg" placeholder="Search tasks" ng-model="searchKey"/>
+                </div>
+            </div>
+
+            <div class="row top-buffer">
+                <div class="col-sm-6">
+                    <table class="table table-bordered">
+                        <tr ng-repeat="task in tasksAM | filter:searchKey" ng-class="{oddRow: $index % 2 === 0}">
+                            <!-- any dates in the following see Date notes at end of this page -->
+                            <td>{{$index + 1}}</td>
+                            <td>{{task.description}}</td>
+                            <td>{{task.date | date}}</td>
+                            <td>{{task.category}}</td>
+                            <td>
+                                <div class="text-center">
+                                    <button class="btn btn-warning btn-sm" ng-click="startEdit($index)">Edit</button>
+                                    <button class="btn btn-danger btn-sm" ng-click="startRemove($index)">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADD -->
+        <div ng-show="view === 'add'">
+            <h3>Add Task</h3>
+
+            <!-- if any of the following fields are dates see Date notes at the end of this page (use <input type="date ...>)  -->
+            <!-- if any of the following fields are drop down lists use Bootstrap 
+			e.g. http://www.w3schools.com/bootstrap/bootstrap_forms_inputs.asp (near the bottom of the page) -->
+            <!-- don't use ng-init in HTML to set initial field values, do it in code in startAdd() -->
+            <div class="row top-buffer">
+                <div class="col-sm-3">
+                    <input class="form-control input-lg" type="text"  placeholder="Task description"  ng-model="descriptionInput" />
+                </div>
+            </div>
+            <div class="row top-buffer">
+                <div class="col-sm-3">
+                    <input class="form-control input-lg" type="date"  ng-model="dateInput"/>
+                </div>
+            </div>
+            <div class="row top-buffer">
+                <div class="col-sm-2">
+                    <!--<input class="form-control input-lg" type="number"  placeholder="Mark"  ng-model="markInput" />-->
+                    <select name="category" class="form-control input-lg" ng-model="categoryInput">
+                        <option value="Personal">Personal</option>
+                        <option value="Work">Work</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 12px;">
+                <div class="col-sm-6">
+                    <button class="btn btn-success btn" ng-disabled="codeInput===''" ng-click="add()">Add</button>
+                    <button class="btn btn-warning btn" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- EDIT -->
+        <div ng-show="view=='edit'">
+            <h3>Edit Unit</h3>
+            <!-- if any of the following fields are dates see Date notes at the end of this page (use <input type="date ...>)  -->
+            <!-- if any of the following fields are drop down lists use Bootstrap
+                 e.g. http://www.w3schools.com/bootstrap/bootstrap_forms_inputs.asp (near the bottom of the page) -->
+            <!-- don't use ng-init in HTML to set initial field values, do it in code in startAdd() -->
+            <div class="row top-buffer">
+                <div class="col-sm-3">
+                    <input class="form-control input-lg" type="text"  placeholder="Task description"  ng-model="descriptionInput" />
+                </div>
+            </div>
+            <div class="row top-buffer">
+                <div class="col-sm-3">
+                    <input class="form-control input-lg" type="date"  ng-model="dateInput"/>
+                </div>
+            </div>
+            <div class="row top-buffer">
+                <div class="col-sm-2">
+                    <!--<input class="form-control input-lg" type="number"  placeholder="Mark"  ng-model="markInput" />-->
+                    <select name="category" class="form-control input-lg" ng-model="categoryInput">
+                        <option value="Personal">Personal</option>
+                        <option value="Work">Work</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 12px;">
+                <div class="col-sm-6">
+                    <button class="btn btn-success btn" ng-disabled="codeInput==''" ng-click="save()">Save</button>
+                    <button class="btn btn-warning btn" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DELETE -->
+        <div ng-show="view=='delete'">
+            <h3>Confirm delete</h3>
+            <div class="row">
+                <div class="col-sm-8">
+                    <!-- any dates in the following will need a filter format -->
+                    <p>
+                        Are you sure you want to delete the task "{{getSelected().description}}" that's due on {{getSelected().date | date}}?
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 12px;">
+                <div class="col-sm-6">
+                    <button class="btn btn-success btn" ng-click="cancel()">No</button>
+                    <button class="btn btn-danger btn" ng-click="remove()">Yes</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="scripts/angular.min.js"></script>
+		<!-- if the Angular Model contains dates see Dates notes at end of this page -->
+        <!--<script src="data/units.js"></script>-->
+        <script src="data/tasks.js"></script>
+
+        <script>
+            angular.module('taskMaintenance', [])
+                    .controller('taskMaintenanceCtrl', TaskMaintenanceCtrl);
+
+            function TaskMaintenanceCtrl($scope) {
+                var selected = -1; //none selected
+
+                $scope.tasksAM = tasks;
+                $scope.view = "";
+                $scope.date = new Date();
+
+                //a convenient list of exposed methods for maintenance programmers
+                $scope.startAdd = startAdd;
+                $scope.cancel = cancel;
+                $scope.add = add;
+                $scope.startEdit = startEdit;
+                $scope.save = save;
+                $scope.startRemove = startRemove;
+                $scope.remove = remove;
+                $scope.getSelected = getSelected;
+
+                setView('list');
+                //not $scope.setView = function(){...} because we don't intend
+                //to expose this function to the View (it's private to the controller's Constructor)
+                function setView(view){
+                    $scope.view = view;
+                }
+
+                //ADD
+                function startAdd(){
+                    //initialise field values
+                    //If there are dates involved see Dates notes at end of this page
+                    $scope.descriptionInput = "";
+                    $scope.dateInput = "";
+                    $scope.categoryInput = "";
+
+                    setView('add');
+                }
+
+                function cancel(){
+                    setView('list');
+                }
+
+                function add(){
+                    var tmpTask = {};
+
+					//If there are dates involved see Dates notes at end of this page
+                    tmpTask.description = $scope.descriptionInput;
+                    tmpTask.date = $scope.dateInput;
+                    tmpTask.category = $scope.categoryInput;
+                    
+                    // console.log(tmpTask);
+                    $scope.tasksAM.push(tmpTask);
+
+                    setView('list');
+                }
+
+                //EDIT
+                function startEdit(index) {
+                    selected = index; //scope of selected is the entire Controller constructor
+
+                    //If there are dates involved see Dates notes at end of this page
+                    $scope.descriptionInput = $scope.tasksAM[index].description;
+                    $scope.dateInput = $scope.tasksAM[index].date;
+                    $scope.categoryInput = $scope.tasksAM[index].category;
+
+                    setView('edit');
+                }
+
+                function save() {
+					//If there are dates involved see Dates notes at end of this page
+                    $scope.tasksAM[selected].description = $scope.descriptionInput;
+                    $scope.tasksAM[selected].date = $scope.dateInput;
+                    $scope.tasksAM[selected].category = $scope.categoryInput;
+
+                    setView('list');
+                }
+
+                //DELETE
+                function startRemove(index) {
+                    selected = index; //scope of selected is the entire Controller constructor
+
+                    setView('delete');
+                }
+
+                function remove() {
+                    $scope.tasksAM.splice(selected, 1);
+                    setView('list');
+                }
+
+                function getSelected() {
+                    return tasks[selected];
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>
+
+<!--
+Any date fields should used HTML5's <input type="date" ... > element to sidestep interpreting user input. It uses a date picker for data entry
+
+Angular Model $scope properties for <input type="date" ... > element are date objects
+You can assign (set) Date objects to these properties and if you get one of these properties you will get a Date object back
+
+These Data objects should be stored and retrieved as such to prevent annoying and time consuming conversions to and from String objects
+Here we are just storing and retrieving Angular Model data to/from an array but the same principle applies
+
+When these objects are displayed in the View (list View and delete confirmation View) they are auto converted to Strings
+using the Date object's toString method presumably
+This produces an unusable  long format so you we need to use an Angular "| date: ..." filter to format into something more manageable
+-->
+
+
+
+
