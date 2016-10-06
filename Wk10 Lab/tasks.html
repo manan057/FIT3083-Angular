@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html ng-app="taskMaintenance"> <!-- whole page will be bootstrapped -->
-<head> <!-- root module is unitMaintenance -->
+<head> <!-- root module is taskMaintenance -->
     <title>Tasks</title>
     <link href="styles/bootstrap.min.css" rel="stylesheet"/>
     <link href="styles/styles.css" rel="stylesheet"/>
@@ -15,7 +15,7 @@
             <div class="row">
                 <div class="col-sm-2">
                     <button class="btn btn-primary btn-lg" ng-click="startAdd()">
-                        Add new unit
+                        Add new task
                     </button>
                 </div>
                 <div class="col-sm-4">
@@ -30,7 +30,7 @@
                             <!-- any dates in the following see Date notes at end of this page -->
                             <td>{{$index + 1}}</td>
                             <td>{{task.description}}</td>
-                            <td>{{task.date | date}}</td>
+                            <td>{{task.date | date:'dd-MM-yyyy'}}</td>
                             <td>{{task.category}}</td>
                             <td>
                                 <div class="text-center">
@@ -82,7 +82,7 @@
 
         <!-- EDIT -->
         <div ng-show="view=='edit'">
-            <h3>Edit Unit</h3>
+            <h3>Edit Task</h3>
             <!-- if any of the following fields are dates see Date notes at the end of this page (use <input type="date ...>)  -->
             <!-- if any of the following fields are drop down lists use Bootstrap
                  e.g. http://www.w3schools.com/bootstrap/bootstrap_forms_inputs.asp (near the bottom of the page) -->
@@ -122,7 +122,7 @@
                 <div class="col-sm-8">
                     <!-- any dates in the following will need a filter format -->
                     <p>
-                        Are you sure you want to delete the task "{{getSelected().description}}" that's due on {{getSelected().date | date}}?
+                        Are you sure you want to delete the task "{{getSelected().description}}" that's due on {{getSelected().date | date:'dd-MM-yyyy'}}?
                     </p>
                 </div>
             </div>
@@ -148,7 +148,7 @@
 
                 $scope.tasksAM = tasks;
                 $scope.view = "";
-                $scope.date = new Date();
+                // $scope.date = new Date();
 
                 //a convenient list of exposed methods for maintenance programmers
                 $scope.startAdd = startAdd;
@@ -204,7 +204,7 @@
                     $scope.descriptionInput = $scope.tasksAM[index].description;
                     $scope.dateInput = $scope.tasksAM[index].date;
                     $scope.categoryInput = $scope.tasksAM[index].category;
-
+                    // console.log($scope.dateInput);
                     setView('edit');
                 }
 

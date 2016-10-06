@@ -1,7 +1,7 @@
 var tasks = [
     {
         description: 'Return library books',
-        date: new Date(2016,10,14),
+        date: new Date(14,10,2016),
         category: 'Personal'
     },
     {
