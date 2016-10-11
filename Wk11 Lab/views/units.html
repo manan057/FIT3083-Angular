@@ -1,0 +1,42 @@
+<link href="style/unit styles.css" rel="stylesheet"/>
+
+<div data-uni-curr-menu-view="Units" data-uni-curr-title="Manage Units">
+
+	<p>Units content (e.g. an interactive units list)</p>
+	<p>{{testData}}</p>
+	
+		<!-- LIST -->
+		<div >
+			<div class="row">
+				<div class="col-sm-2">
+					<button class="btn btn-primary btn-lg" ng-click="startAdd()">
+						Add new unit
+					</button>
+				</div>
+				<div class="col-sm-4" >
+					<input class="form-control input-lg" placeholder="Search units" ng-model="searchKey" />
+				</div>
+			</div>
+			
+			<div class="row top-buffer">
+				<div class="col-sm-6">
+					<table class="table table-bordered">
+						<tr ng-repeat="unit in unitsAM | filter:searchKey" ng-class="{oddRow: $index % 2 === 0}">
+							<!-- any dates in the following will need a filter format -->
+							<td>{{$index + 1}}</td>
+							<td>{{unit.code}}</td>
+							<td>{{unit.title}}</td>
+							<td>{{unit.mark}}</td>
+							<td>
+								<div class="text-center">
+									<button class ="btn btn-warning btn-sm" ng-click="startEdit($index)">Edit</button >
+									<button class ="btn btn-danger btn-sm" ng-click="startRemove($index)">Delete</button >
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	
+</div>
